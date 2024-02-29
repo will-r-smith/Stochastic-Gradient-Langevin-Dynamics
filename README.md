@@ -9,7 +9,7 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 
 #### Existing Models:
 
-- Stochastic Gradient Langevin Dynamics SGLD [1]
+- Stochastic Gradient Langevin Dynamics SGLD [@test]
 
 - Modified Stochastic Gradient Langevin Dynamics mSGLD [2]
 
@@ -23,6 +23,8 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 
 
 ## References
+
+[@test]
 
 [1] 
 
