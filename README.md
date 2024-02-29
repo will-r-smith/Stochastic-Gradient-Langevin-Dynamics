@@ -5,11 +5,15 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 
 ### Thoughts
 
-- Computational comparison of stochastic gradient Langevin Dynamics -based approaches with Markov Chain Monte Carlo [7] and Hybrid Monte Carlo methods
+- Computational comparison of stochastic gradient Langevin Dynamics -based approaches with Markov Chain Monte Carlo and Hybrid Monte Carlo methods
+  
+- Comparison of full dataset models versus subset models with regards to performance and accuracy
+
+
 
 #### Existing Models:
 
-- Stochastic Gradient Langevin Dynamics SGLD [@test]
+- Stochastic Gradient Langevin Dynamics SGLD [1]
 
 - Modified Stochastic Gradient Langevin Dynamics mSGLD [2]
 
@@ -22,9 +26,8 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 - Covariance-Controlled Adaptive Langevin CCAdL [6]
 
 
-## References
 
-[@test]
+## References
 
 [1] 
 
