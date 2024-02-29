@@ -40,27 +40,6 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 
 
 
-
-1. [Section One](#section-one)
-2. [Section Two](#section-two)
-3. [Section Three](#section-three)
-
-<section id="section-one">
-
-## Section One
-Content for Section One.
-
-</section>
-
-<section id="section-two">
-
-## Section Two
-Content for Section Two.
-
-</section>
-
-<section id="section-three">
-
 ## Section Three
 Content for Section Three.
 
