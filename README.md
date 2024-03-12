@@ -5,31 +5,37 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 
 - [ ] Write a function that runs the model, plots the graphs and saves the data and outputs to a new file in the outputs folder 
 
-    - [ ] Write the functions for the steps of the standard Stochastic Gradient Langevin Dynamics in a somewhat generalised fashion
+    - [x] Write the functions for the steps of the standard Stochastic Gradient Langevin Dynamics in a somewhat generalised fashion
 
-    - [ ] Write the force function
+    - [x] Write the force function
 
-    - [ ] Write the code for the model function (e.g. BAOAB) based off a character string
+    - [x] Write the code for the model function (e.g. BAOAB) based off a character string
 
-    - [ ] Write the code to plot the figures required
+    - [x] Write the code to plot the figures required
 
-    - [ ] Write the code to save a new folder based off existing models and the name of the model and its important parameters
+    - [x] Write the code to save a new folder based off existing models and the name of the model and its important parameters
 
     - [ ] Write the code to populate the new folder with a csv file containing the data, a json file containing the model parameters and the date and model type etc. and also save the figures to the folder
+
+        - [x] Save figures
+
+        - [ ] Save data
+
+        - [ ] Save parameters in json
 
 - [ ] Create Models
 
     - [ ] Model 1 (Example 1 in CCAdL)
 
-        - [ ] Derive force function
+        - [x] Derive force function
 
-        - [ ] Write up force function derivation in paper
+        - [x] Write up force function derivation in paper
 
-        - [ ] Write force function code
+        - [x] Write force function code
 
-        - [ ] Generate data
+        - [x] Generate data
 
-        - [ ] Run model
+        - [x] Run model
 
     - [ ] Model 2 (Example 2 in CCAdL)
 
@@ -69,15 +75,15 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 
         - [ ] Run experiments using model 3
 
-    - [ ] SGNHT
+    - [x] SGNHT
 
-        - [ ] Derive the O-step
+        - [x] Derive the O-step
 
         - [ ] Write up derivation in the paper
 
-        - [ ] Write the code for the steps
+        - [x] Write the code for the steps
 
-        - [ ] Run experiments using model 3
+        - [x] Run experiments using model 3
 
 
 
@@ -99,5 +105,3 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 - Covariance-Controlled Adaptive Langevin CCAdL [6]
 
 
-
-</section>
