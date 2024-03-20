@@ -12,12 +12,12 @@ using Plots, Distributions, LinearAlgebra, Random
 q0 = [0,1]      # just for initialization
 p0 = randn(2)
 
-Nsteps = 5000000
+Nsteps = 1000000
 h = 0.01
 A = 50
 beta = 1.0
 N = 100
-subset_prop = 0.1
+subset_prop = 0.01
 data = randn(N)
 q_true = [0, 1]
 

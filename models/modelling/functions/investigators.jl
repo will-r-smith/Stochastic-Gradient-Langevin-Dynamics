@@ -55,7 +55,7 @@ function simulation(problem, q0, p0, q_true, Nsteps, N, h, regime, subset, step_
     integrator = collect(split(regime, "_"))[1]
     steps = collect(split(collect(split(regime, "_"))[2], ""))
 
-    q_traj, p_traj, t_traj = run_simulation(q0, p0, Nsteps, h, integrator, steps, 0.1, step_function, grad_U, data, A, beta, A, I(length(q0)))
+    q_traj, p_traj, t_traj = run_simulation(q0, p0, Nsteps, h, integrator, steps, subset, step_function, grad_U, data, A, beta, A, I(length(q0)))
 
     folder = new_folder(integrator, problem, "simulations")
 

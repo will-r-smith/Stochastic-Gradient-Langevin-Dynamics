@@ -105,3 +105,6 @@ Investigation into the use of kinetic Langevin dynamics in the setting of Bayesi
 - Covariance-Controlled Adaptive Langevin CCAdL [6]
 
 
+
+
+- [ ] subset proportion vs friction parameter plot with different bias (colourbar) (or accuracy with problem 2)
