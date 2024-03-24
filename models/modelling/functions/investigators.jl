@@ -59,9 +59,10 @@ function simulation(problem, q0, p0, q_true, Nsteps, N, h, regime, subset, step_
 
     folder = new_folder(integrator, problem, "simulations")
 
-    plot_density(data, N, q_traj, folder)
-
-    plot_convergence(data, q_traj, folder)
-
+    if problem == "problem_1"
+        plot_density(data, N, q_traj, folder)
+        plot_convergence(data, q_traj, folder)
+    end
+    
     return q_traj, p_traj, t_traj
 end

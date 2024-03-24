@@ -27,3 +27,22 @@ function model1_grad_U(data, q, N, n)
     return [d_mu, d_gamma]
 
 end
+
+
+function model2_grad_U(data, w, N, n)
+    # 2nd model - Large Scale Bayesian Logistic Regression
+    
+    x = data[:, 1:100]
+    y = data[:, 101]
+
+    a = exp(- y[i] * dot(w, x[i]))
+
+    for i in 1:length(y)
+        w = w .- N / n * y[i] * x[i] * a / (1 + a)
+    end
+
+    return w
+
+end
+
+

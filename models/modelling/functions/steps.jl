@@ -105,7 +105,7 @@ julia> name(args)
 expected_output
 ```
 """
-function C_step(q, I, N, n, grad_U, t)
+function C_step(q, I, N, n, grad_U, t, data)
     g_theta_mean = grad_U(data, q, N, n)
     V_diagonal = zeros(length(q))
     

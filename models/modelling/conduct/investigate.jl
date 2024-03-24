@@ -6,6 +6,9 @@ for file in files
     end
 end
 
+
+
+
 using Plots, Distributions, LinearAlgebra, Random
 
 # Initialize one walker
@@ -19,11 +22,11 @@ A_values = [1,5,10]
 A = 10
 beta = 1.0
 N = 100
-subset_prop = [0.1,0.2]
+subset_prop = range(0.01, stop=0.1, step=0.01)
 
 data = randn(N)
 q_true = [0, 1]
 
 
-investigation("problem_1", q0, p0, q_true, Nsteps, N, h, "SGNHT_BADODAB", subset_prop, step_function, model1_grad_U, data, A_values, beta)
+#investigation("problem_1", q0, p0, q_true, Nsteps, N, h, "SGNHT_BADODAB", subset_prop, step_function, model1_grad_U, data, A_values, beta)
 investigation("problem_1", q0, p0, q_true, Nsteps, N, h, "SGLD_BAOAB", subset_prop, step_function, model1_grad_U, data, A_values, beta)

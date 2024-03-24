@@ -6,6 +6,9 @@ for file in files
     end
 end
 
+
+
+
 using Plots, Distributions, LinearAlgebra, Random
 
 # Initialize one walker

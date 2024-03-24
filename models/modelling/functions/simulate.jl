@@ -33,7 +33,7 @@ function step_function(q, p, h, integrator, steps, N, n, A, beta, data, grad_U, 
             mu = 1
             xi = D_step(p, h, xi, mu, beta)
         elseif s == "C"
-            I = C_step(q, I, N, n, grad_U, t)
+            I = C_step(q, I, N, n, grad_U, t, data)
         end
     end
 
@@ -70,10 +70,12 @@ function run_simulation(q0, p0, Nsteps, h, integrator, steps, subset_prop, step_
 
     N = length(data)
     n = Int(round(N * subset_prop))
+    println(n)
 
     for i in 1:Nsteps
         idx = randperm(N)[1:n]
         samples = data[idx]
+        println(length(samples))
         q, p = step_function(q, p, h, integrator, steps, N, n, A, beta, samples, grad_U, xi, I, t)
 
         t += h
