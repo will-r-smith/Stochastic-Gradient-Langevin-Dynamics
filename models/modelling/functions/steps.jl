@@ -45,8 +45,7 @@ julia> B_step([0.3, 0.4], [0.1, 0.2], 0.01, grad_U, data, 100, 10)
  0.402...
 ```
 """
-function B_step(p, q, h, grad_U, data, N, n)
-    F = - grad_U(data, q, N, n)
+function B_step(p, h, F)
     p = p + h * F
     return p
 end
@@ -189,7 +188,7 @@ function step_function(q, p, h, integrator, steps, N, n, A, beta, data, grad_U, 
         if string(s) == "A"
             q = A_step(q, p, h / occurences)
         elseif string(s) == "B"
-            p = B_step(p, q, h / occurences, grad_U, data, N, n)
+            p = B_step(p, h / occurences, F)
         elseif string(s) == "O"
             if integrator == "SGLD"
                 phi = A
@@ -207,7 +206,7 @@ function step_function(q, p, h, integrator, steps, N, n, A, beta, data, grad_U, 
         end
     end
 
-    return q, p
+    return q, p, xi
 end
 
 
@@ -239,7 +238,7 @@ julia> name(args)
 expected_output
 ```
 """
-function run_simulation(q0, p0, Nsteps, h, integrator, steps, subset_prop, step_function, grad_U, data, A, beta, xi0, I0)
+function run_simulation2(q0, p0, Nsteps, h, integrator, steps, subset_prop, step_function, grad_U, data, A, beta, xi0, I0)
     q_t = zeros(length(q0),Nsteps)
     p_t = zeros(length(q0),Nsteps)
     t_t = zeros(Nsteps)
@@ -256,7 +255,8 @@ function run_simulation(q0, p0, Nsteps, h, integrator, steps, subset_prop, step_
     for i in 1:Nsteps
         idx = randperm(N)[1:n]
         samples = data[idx,:]
-        q, p = step_function(q, p, h, integrator, steps, N, n, A, beta, samples, grad_U, xi, I, t)
+        force = - grad_U(data, q, N, n)
+        q, p, xi, I = step_function(q, p, h, integrator, steps, N, n, A, beta, samples, force, xi, I, t)
 
         t += h
         
@@ -269,16 +269,76 @@ function run_simulation(q0, p0, Nsteps, h, integrator, steps, subset_prop, step_
     return q_t, p_t, t_t
 end
 
+function run_simulation(q0, p0, Nsteps, h, A, beta, Samples, step_function, grad_U, N, n)
+    q_traj = zeros(2,Nsteps)
+    p_traj = zeros(2,Nsteps)
+    t_traj = zeros(Nsteps)
+
+    q = copy(q0)
+    p = copy(p0)
+    t = 0.0
+
+    for i in 1:Nsteps
+        idx = randperm(N)[1:n]
+        data = Samples[idx]
+        force = - grad_U(data, q, N, n)
+        q, p = step_function(q, p, h, A, beta, force, data)
+        t += h
+        
+        q_traj[:,i] = q
+        p_traj[:,i] = p
+        t_traj[i] = t
+    end
+
+    return q_traj, p_traj, t_traj
+end
 
 
 
-
-function BAOAB_step(q, p, h, integrator, steps, N, n, A, beta, data, grad_U, xi, I, t)
+function BAOAB_step(q, p, h, A, beta, force, data)
     phi = A
-    p = B_step(p, q, h / 2, grad_U, data, N, n)
+    p = B_step(p, h / 2, force)
     q = A_step(q, p, h / 2)
     p = O_step(p, h, phi, A, beta)
     q = A_step(q, p, h / 2)
-    p = B_step(p, q, h / 2, grad_U, data, N, n)
+    p = B_step(p, h / 2, force)
     return q, p
+end
+
+function BAOAB_step2(q, p, h, integrator, steps, N, n, A, beta, data, force, xi, I, t)
+    phi = A
+    p = B_step(p, h / occurences, force)
+    q = A_step(q, p, h / 2)
+    p = O_step(p, h, phi, A, beta)
+    q = A_step(q, p, h / 2)
+    p = B_step(p, h / occurences, force)
+    return q, p, xi, I
+end
+
+function BADODAB_step(q, p, h, integrator, steps, N, n, A, beta, data, force, xi, I, t)
+    phi = xi
+    mu = 1
+    
+    p = B_step(p, h / occurences, force)
+    q = A_step(q, p, h / 2)
+    xi = D_step(p, h, xi, mu, beta)
+    p = O_step(p, h, xi, A, beta)
+    xi = D_step(p, h, xi, mu, beta)
+    q = A_step(q, p, h / 2)
+    p = B_step(p, h / occurences, force)
+    return q, p, xi, I
+end
+
+
+function BADCOCDAB_step(q, p, h, integrator, steps, N, n, A, beta, data, force, xi, I, t)
+    mu = 1
+    p = B_step(p, h / occurences, force)
+    q = A_step(q, p, h / 2)
+    xi = D_step(p, h, xi, mu, beta)
+    p = O_step(p, h, xi, A, beta)
+    xi = D_step(p, h, xi, mu, beta)
+    q = A_step(q, p, h / 2)
+    p = B_step(p, h / occurences, force)
+    I = C_step(q, I, N, n, grad_U, t, data)
+    return q, p, xi, I
 end
