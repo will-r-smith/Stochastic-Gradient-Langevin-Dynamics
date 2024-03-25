@@ -13,7 +13,7 @@ julia> name(args)
 expected_output
 ```
 """
-function model1_grad_U(data, q, N, n)
+function problem1_grad_U(data, q, N, n)
     # 1st model - Bayesian Inference for Gaussian Distribution
     mu, gamma = q
 
@@ -29,20 +29,29 @@ function model1_grad_U(data, q, N, n)
 end
 
 
-function model2_grad_U(data, w, N, n)
+
+function problem2_grad_U(data, w, N, n)
     # 2nd model - Large Scale Bayesian Logistic Regression
-    
-    x = data[:, 1:100]
-    y = data[:, 101]
+    x = data[:, 1:size(data, 2)-1]
+    y = data[:, size(data, 2)]
 
-    a = exp(- y[i] * dot(w, x[i]))
+    w_old = w
 
+    sum = zeros(size(data, 2)-1)
     for i in 1:length(y)
-        w = w .- N / n * y[i] * x[i] * a / (1 + a)
+        a = exp(- y[i] * dot(w, x[i, :]))
+        #sum = sum .+ y[i] * x[i, :] * a / (1 + a)
+        sum = sum .+ (y[i] * x[i, :] / (1 + a))
     end
+    #w = w .- N/n * sum
+
+    w = sign.(w) .* sum * N/n
+
+    #for i in 1:length(y)
+        #a = exp(- y[i] * dot(w_old, x[i, :]))
+        #w = w .- (N / n * y[i] * x[i, :] * a / (1 + a))
+    #end
 
     return w
 
 end
-
-
