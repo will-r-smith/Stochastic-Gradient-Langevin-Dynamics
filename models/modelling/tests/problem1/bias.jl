@@ -128,7 +128,7 @@ function collatePlot(json_dir, parameter)
     x_values = [key[2] for key in keys(all_investigation_data)]  # Friction values
     y_values = [data["proportion"] for data in values(all_investigation_data)]  # Proportion values
     z_values = [data["bias"] for data in values(all_investigation_data)]  # Bias values
-
+    """
     # Sort x_values and y_values
     sorted_indices_x = sortperm(x_values)
     x_values = x_values[sorted_indices_x]
@@ -140,19 +140,57 @@ function collatePlot(json_dir, parameter)
     x_values = x_values[sorted_indices_y]
     y_values = y_values[sorted_indices_y]
     z_values = z_values[sorted_indices_y]
-
+    
+    println(y_values)
     y_values = unique(y_values)
     x_values = unique(x_values)
+
+    println(y_values)
 
     println("A values:")
     println(x_values)
     println("n values:")
     println(y_values)
-
+    
     # Reshape z_values to match dimensions of x_values and y_values
-    z_values_reshaped = reshape(z_values, length(y_values), length(x_values))
+    z_values = reshape(z_values, length(y_values), length(x_values))
+    y_sort = sortperm(y_values)
+    x_sort = sortperm(x_values)
 
-    biasPlot = contourf(x_values, y_values, z_values_reshaped, levels=20, color=:turbo, colorbar=true, xlabel="Friction", ylabel="Proportion", title="Bias Plot")
+    x_values = x_values[x_sort]
+    y_values = y_values[y_sort]
+    z_values = z_values[y_sort, :]
+    z_values = z_values[:, x_sort]
+    """
+
+    # Combine x, y, and z vectors into a DataFrame
+    df = DataFrame(x = x_values, y = y_values, z = z_values)
+
+    # Sort the DataFrame based on x and y values
+    sorted_df = sort(df, [:x, :y])
+
+    # Separate the sorted DataFrame into sorted x, y, and z vectors
+    sorted_x_positions = sorted_df.x
+    sorted_y_positions = sorted_df.y
+    sorted_z_positions = sorted_df.z
+
+    # Find unique x and y positions
+    unique_x_positions = unique(sorted_x_positions)
+    unique_y_positions = unique(sorted_y_positions)
+
+    # Initialize the 2D array for z values
+    z_array = zeros(length(unique_y_positions), length(unique_x_positions))
+
+    # Fill the z_array with sorted z values
+    for i in 1:nrow(sorted_df)
+        x_index = findfirst(x -> x == sorted_df[i, :x], unique_x_positions)
+        y_index = findfirst(y -> y == sorted_df[i, :y], unique_y_positions)
+        z_array[y_index, x_index] = sorted_df[i, :z]
+    end
+
+
+
+    biasPlot = contourf(unique_x_positions, unique_y_positions, z_array, levels=20, color=:turbo, colorbar=true, xlabel="Friction", ylabel="Proportion", title="Bias Plot")
 
     return biasPlot
 
