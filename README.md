@@ -1,110 +1,27 @@
 # Stochastic-Gradient-Langevin-Dynamics
 Investigation into the use of kinetic Langevin dynamics in the setting of Bayesian sampling for machine learning.
 
-### To Do:
 
-- [ ] Write a function that runs the model, plots the graphs and saves the data and outputs to a new file in the outputs folder 
+## Introduction
 
-    - [x] Write the functions for the steps of the standard Stochastic Gradient Langevin Dynamics in a somewhat generalised fashion
+As a gradient-based Monte Carlo sampling algorithm, Langevin dynamics has applications in Bayesian inference. In the setting of Bayesian machine learning, datasets are used to define a differentiable objective function. From this an effective friction law is obtained which is applied in the framework of Langevin dynamics. However, machine learning applications frequently deal with very large, high-dimensional datasets and as such direct sampling with the entire dataset is often computationally infeasible. In order to mitigate this issue, the model is often combined with characteristics of stochastic gradient descent methods. Stochastic gradient methods use a subset of the data at each timestep to approximate the true gradient,
+\begin{equation*}
+        w_{t+1} = w_t - \frac{N}{n} \sum_{k=1}^{n} \nabla U(w_t, q_k).
+\end{equation*}
+The principle is that the expectation of the stochastic gradient is equivalent to that of the entire dataset,
+\begin{equation*}
+        \mathbb{E}\left[ \frac{N}{n} \sum_{k=1}^{n} \nabla U(w_t, q_k) \right] = \sum_{i=1}^{N} \nabla U(w_t,q_i),
+\end{equation*}
+and as such serves as an appropriate approximation. This stochastic gradient estimator forms the likelihood gradient terms in the stochastic gradient Langevin dynamics (SGLD). SGLD can be seen as Langevin dynamics applied to posterior distributions where samples are taken from a posterior distribution of parameters arising from subsets of the data.
 
-    - [x] Write the force function
+Langevin dynamics is an extension of Brownian dynamics that incorporates inertial effects. The dynamics involve the introduction of a friction parameter. In kinetic Langevin dynamics, the system of stochastic differential equations for a particle is
+\begin{align*} 
+    dq &= pdt \\ 
+    dp &= -\nabla U(q)dt - A pdt + \sqrt{2 A \beta^{-1}} dW_t 
+\end{align*}
 
-    - [x] Write the code for the model function (e.g. BAOAB) based off a character string
+where $q$ and $p$ are position and momentum, respectively, $\beta^{-1}$ is the inverse temperature and $A$ is the friction parameter. The limiting dynamical case, as $A \rightarrow \infty$, corresponds to the purely diffusive Brownian regime.
 
-    - [x] Write the code to plot the figures required
+Whilst stochastic gradients can offer significant reductions in computational cost, the smaller subsets are associated with greater variance and one must be mindful of bias introduced into the model through the approach. The effect of the subset size on bias has been well documented but the effect of the friction parameter on bias has been studied less. \cite{shang2015covariance} investigated bias for several other gradient-based Monte Carlo sampling algorithms including SGNHT and SGHMC but only considered two values for the friction parameter. This report seeks to investigate in detail the effect of the friction parameter on the bias introduced into the model as a result of the stochastic gradients, specifically for SGLD. 
 
-    - [x] Write the code to save a new folder based off existing models and the name of the model and its important parameters
-
-    - [ ] Write the code to populate the new folder with a csv file containing the data, a json file containing the model parameters and the date and model type etc. and also save the figures to the folder
-
-        - [x] Save figures
-
-        - [ ] Save data
-
-        - [ ] Save parameters in json
-
-- [ ] Create Models
-
-    - [ ] Model 1 (Example 1 in CCAdL)
-
-        - [x] Derive force function
-
-        - [x] Write up force function derivation in paper
-
-        - [x] Write force function code
-
-        - [x] Generate data
-
-        - [x] Run model
-
-    - [ ] Model 2 (Example 2 in CCAdL)
-
-        - [ ] Derive force function
-
-        - [ ] Write up force function derivation in paper
-
-        - [ ] Write force function code
-
-        - [ ] Download and save dataset to the data folder
-
-        - [ ] Run model
-
-        - [ ] Run model with Stochastic Gradient Langevin Dynamics
-
-    - [ ] Model 3 (Create our own machine learning problem)
-
-        - [ ] Derive force function (perhaps use the sigmoid classification problem in 4.2 but with a new dataset)
-
-        - [ ] Write up force function derivation in paper
-
-        - [ ] Write force function code
-
-        - [ ] Download and save dataset to the data folder
-
-        - [ ] Run model with Stochastic Gradient Langevin Dynamics
-
-- [ ] Apply other integrators
-
-    - [ ] CCAdL
-
-        - [ ] Derive the O-step
-
-        - [ ] Write up derivation in the paper
-
-        - [ ] Write the code for the steps
-
-        - [ ] Run experiments using model 3
-
-    - [x] SGNHT
-
-        - [x] Derive the O-step
-
-        - [ ] Write up derivation in the paper
-
-        - [x] Write the code for the steps
-
-        - [x] Run experiments using model 3
-
-
-
-
-
-
-#### Existing Models:
-
-- Stochastic Gradient Langevin Dynamics SGLD [1]
-
-- Modified Stochastic Gradient Langevin Dynamics mSGLD [2]
-
-- Stochastic Gradient Hamiltonian Monte Carlo SGHMC [3]
-
-- Stochastic Gradient Nose-Hoover Thermostat SGNHT [4]
-
-- Adaptive Langevin thermostat  Ad-Langevin [5]
-
-- Covariance-Controlled Adaptive Langevin CCAdL [6]
-
-
-
-
-- [ ] subset proportion vs friction parameter plot with different bias (colourbar) (or accuracy with problem 2)
+Our approach is to conduct investigations into the induced bias for two experimental applications, performing simulations for an array of friction parameters and subset proportions. 
